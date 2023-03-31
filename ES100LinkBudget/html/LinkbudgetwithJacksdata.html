@@ -1,0 +1,478 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>LinkbudgetwithJacksdata</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-12-04"><meta name="DC.source" content="LinkbudgetwithJacksdata.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">JPL Mission Parameters for REASON</a></li><li><a href="#3">CaliPer Parameters</a></li><li><a href="#4">Calulate Effective Area</a></li><li><a href="#5">T_obs</a></li><li><a href="#6">Universal constants</a></li><li><a href="#7">Wavelenth upper and lower bound</a></li><li><a href="#8">Power received by one RF emission from REASON upper and lower bound side lobe</a></li><li><a href="#9">Effective Isotropic Radiation Power</a></li></ul></div><pre class="codeinput">close <span class="string">all</span>; clear <span class="string">all</span>; clc;
+</pre><h2 id="2">JPL Mission Parameters for REASON</h2><pre class="codeinput"><span class="comment">%REASON transmit upper and lower bound (Watts)</span>
+    P_t_l = 8;
+    P_t_u = 10;
+
+<span class="comment">%REASON boresight gain upper and lower bound (dBi)</span>
+    G_0_l = 9;
+    G_0_u = 10;
+
+<span class="comment">%REASON Side lobe gain upper and lower bound (dBi)</span>
+    G_ts_l = 10^(-15/20);
+    G_ts_u = 10^(0/20);
+
+<span class="comment">%REASON polarization loss</span>
+    L_pol = .7;
+
+<span class="comment">%REASON Coherence loss</span>
+    L_c = .5;
+
+<span class="comment">%REASON duty cycle</span>
+    d = .1;
+
+<span class="comment">%REASON allowable observation time for calibration (s)</span>
+    Obs = 4*60^2;
+
+    Obs_a = .5:.5:8;
+    Obs_a_s =Obs_a*60^2;
+<span class="comment">%Receive noise temperture upper and lower bound</span>
+    T_l = 2000;
+    T_u = 5800;
+
+<span class="comment">%frequency badwidth upper and lower bound</span>
+    f_l = 50e6;
+    f_c = 60e6;
+    f_u = 66e6;
+    B = f_u-f_l;
+
+<span class="comment">%min allowable seperation of CaliPer from Clipper</span>
+R = 1000e3;
+</pre><h2 id="3">CaliPer Parameters</h2><pre class="codeinput"><span class="comment">%effective area of CaliPer Antenna projection</span>
+
+<span class="comment">%%S11 Receive atenna effiency at a certain frequency</span>
+T = readtable(<span class="string">'S11V3.csv'</span>,<span class="string">'NumHeaderLines'</span>,3);
+</pre><h2 id="4">Calulate Effective Area</h2><p>Get the Antenna width and height</p><pre class="codeinput">    w_a = 2*table2array(T(:,2));
+    h_a = table2array(T(:,3));
+    length = height(w_a);
+<span class="comment">%find A_eff</span>
+    A_eff = zeros(length);
+    <span class="keyword">for</span> i = 1:length
+        A_eff(i) = w_a(i)*h_a(i);
+    <span class="keyword">end</span>
+
+<span class="comment">% convert S11 dB for 54,60,66MHz to decimal</span>
+f_a_l = zeros(length);
+f_a_c = zeros(length);
+f_a_h = zeros(length);
+
+<span class="keyword">for</span> i = 1:height(T(:,3))
+
+    f_a_l(i) = 1-10^(table2array(T(i,4))/10);
+    f_a_c(i) = 1-10^(table2array(T(i,6))/10);
+    f_a_h(i) = 1-10^(table2array(T(i,5))/10);
+<span class="keyword">end</span>
+
+<span class="comment">%simulated atenna efficenty from .01 to 100%</span>
+eff = .01:0.01:1;
+leneff = width(eff);
+<span class="comment">%number of atenna elements</span>
+N_elm = 1;
+</pre><h2 id="5">T_obs</h2><pre class="codeinput">T_obs = d*Obs;
+T_obs_a = Obs_a*d;
+</pre><h2 id="6">Universal constants</h2><pre class="codeinput"><span class="comment">%Boltzman Constant</span>
+    k = .380649e-23;
+    c = 3e8;
+</pre><h2 id="7">Wavelenth upper and lower bound</h2><pre class="codeinput">    lambda_l = c/f_l;
+    lambda_u = c/f_u;
+    lambda_c = c/f_c;
+</pre><h2 id="8">Power received by one RF emission from REASON upper and lower bound side lobe</h2><pre class="codeinput">    P_r_l_e = zeros(length,leneff);
+
+    <span class="keyword">for</span> i = 1:length
+        <span class="keyword">for</span> j = 1:leneff
+        P_r_l_e(i,j) = P_t_l*G_ts_l*(lambda_u)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*eff(j);
+
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+<span class="comment">%%Signal to Noise Power Ratio for tranmission (dB)</span>
+    SNR = zeros(length, leneff);
+    <span class="keyword">for</span> i = 1:length
+        <span class="keyword">for</span> j = 1:leneff
+
+            SNR(i,j) = 20*log((2*P_r_l_e(i,j)*T_obs*L_c*(1/(k*T_u*B))));
+
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+figure()
+plot(eff,SNR)
+title(<span class="string">"SNR vs. Atenna efficiency side lobe -15dB REASON signal 3000km and 4 hour observation time"</span>)
+xlabel(<span class="string">"Antenna efficiency"</span>)
+ylabel(<span class="string">"SNR"</span>)
+legend(<span class="string">"4mm"</span>,<span class="string">"8mm"</span>,<span class="string">"16mm"</span>,<span class="string">"32mm"</span>,<span class="string">"40mm"</span>,<span class="string">"48mm"</span>,<span class="string">"100mm"</span>)
+
+<span class="comment">%%REASON Boresight power as a function of antenna diameter</span>
+
+<span class="keyword">for</span> i = 1:length
+            P_r_l_bor(i) = P_t_l*G_0_u*(lambda_l)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*f_a_l(i);
+
+<span class="keyword">end</span>
+
+
+<span class="keyword">for</span> i = 1:length
+            P_r_u_bor(i) = P_t_l*G_0_u*(lambda_u)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*f_a_h(i);
+
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> i = 1:length
+            P_r_c_bor(i) = P_t_l*G_0_u*(lambda_c)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*f_a_c(i);
+
+<span class="keyword">end</span>
+
+figure()
+plot(w_a,P_r_l_bor',w_a,P_r_c_bor',w_a,P_r_u_bor')
+title(<span class="string">"Antenna Boresight Power at 3000km at 4 hours observation time"</span>)
+xlabel(<span class="string">"Antenna Width (m)"</span>)
+ylabel(<span class="string">"Power (W)"</span>)
+legend(<span class="string">"54e6 Mhz"</span>,<span class="string">"60e6 Mhz"</span>,<span class="string">"66e6 Mhz"</span>)
+
+<span class="comment">%%SNR observation time, lower bound efficiency, width</span>
+   f_a_l_len = width(f_a_l);
+   T_obs_a_len = width(Obs_a_s);
+
+
+                <span class="keyword">for</span> i = 1:length
+                P_r_l_e(i) = P_t_l*G_ts_l*(lambda_l)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol;
+                <span class="keyword">end</span>
+                <span class="keyword">for</span> i = 1:length
+                    <span class="keyword">for</span> j = 1:T_obs_a_len
+                        SNR1(i,j) = 20*log((2*P_r_l_e(i)*Obs_a_s(j)*L_c*(1/(k*T_u*B))));
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+figure()
+ plot(T_obs_a,SNR1)
+ title(<span class="string">"Antenna SNR vs observation time at 3000km at -15dBi REASON signal side lobe"</span>)
+ xlabel(<span class="string">"Observation time (Hr)"</span>)
+ ylabel(<span class="string">"SNR (dB)"</span>)
+ legend(<span class="string">"4mm"</span>,<span class="string">"8mm"</span>,<span class="string">"16mm"</span>,<span class="string">"32mm"</span>,<span class="string">"40mm"</span>,<span class="string">"48mm"</span>,<span class="string">"100mm"</span>)
+
+<span class="comment">%%SNR vs. distance</span>
+R_a = 100:100:5e3;
+R_a_m = R_a*1e3;
+R_a_len = width(R_a);
+
+                <span class="keyword">for</span> i = 1:length
+                    <span class="keyword">for</span> j = 1:R_a_len
+                     P_r_l_e(i,j) = P_t_l*G_ts_l*(lambda_l)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R_a_m(j)^2))*L_pol;
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+                <span class="keyword">for</span> i = 1:length
+                    <span class="keyword">for</span> j = 1:R_a_len
+                        SNR1(i,j) = 20*log((2*P_r_l_e(i,j)*Obs*L_c*(1/(k*T_u*B))));
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+
+
+figure()
+plot(R_a,SNR1)
+title(<span class="string">"Antenna SNR vs distance at at -15dBi REASON signal side lobe 4 hour observation time"</span>)
+xlabel(<span class="string">"Distance (km)"</span>)
+ylabel(<span class="string">"SNR (dB)"</span>)
+legend(<span class="string">"4mm"</span>,<span class="string">"8mm"</span>,<span class="string">"16mm"</span>,<span class="string">"32mm"</span>,<span class="string">"40mm"</span>,<span class="string">"48mm"</span>,<span class="string">"100mm"</span>)
+</pre><img vspace="5" hspace="5" src="LinkbudgetwithJacksdata_01.png" alt=""> <img vspace="5" hspace="5" src="LinkbudgetwithJacksdata_02.png" alt=""> <img vspace="5" hspace="5" src="LinkbudgetwithJacksdata_03.png" alt=""> <img vspace="5" hspace="5" src="LinkbudgetwithJacksdata_04.png" alt=""> <h2 id="9">Effective Isotropic Radiation Power</h2><pre class="codeinput"><span class="comment">%calbe loss (dB)</span>
+    <span class="comment">%L_c = -5;</span>
+   <span class="comment">% EIRP = 10*log(P_r_u) - L_c + 2.15</span>
+
+
+
+
+<span class="comment">%equation variables</span>
+
+
+
+<span class="comment">% P_r =</span>
+<span class="comment">% G_0 =</span>
+
+<span class="comment">% A_eff =</span>
+
+<span class="comment">%</span>
+<span class="comment">% R =</span>
+<span class="comment">%</span>
+<span class="comment">% G_a =</span>
+<span class="comment">% T_obs =</span>
+<span class="comment">% k =</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+close all; clear all; clc;
+
+%% JPL Mission Parameters for REASON
+
+%REASON transmit upper and lower bound (Watts)
+    P_t_l = 8;
+    P_t_u = 10;
+
+%REASON boresight gain upper and lower bound (dBi)
+    G_0_l = 9;
+    G_0_u = 10;
+
+%REASON Side lobe gain upper and lower bound (dBi)
+    G_ts_l = 10^(-15/20);
+    G_ts_u = 10^(0/20);
+
+%REASON polarization loss 
+    L_pol = .7;
+
+%REASON Coherence loss 
+    L_c = .5;
+
+%REASON duty cycle
+    d = .1;
+
+%REASON allowable observation time for calibration (s)
+    Obs = 4*60^2;
+    
+    Obs_a = .5:.5:8;
+    Obs_a_s =Obs_a*60^2;
+%Receive noise temperture upper and lower bound
+    T_l = 2000;
+    T_u = 5800;
+
+%frequency badwidth upper and lower bound
+    f_l = 50e6;
+    f_c = 60e6;
+    f_u = 66e6;
+    B = f_u-f_l;
+
+%min allowable seperation of CaliPer from Clipper
+R = 1000e3;
+
+%% CaliPer Parameters
+%effective area of CaliPer Antenna projection
+
+%%S11 Receive atenna effiency at a certain frequency
+T = readtable('S11V3.csv','NumHeaderLines',3);
+
+%% Calulate Effective Area
+% Get the Antenna width and height
+    w_a = 2*table2array(T(:,2));
+    h_a = table2array(T(:,3));
+    length = height(w_a);
+%find A_eff
+    A_eff = zeros(length);
+    for i = 1:length
+        A_eff(i) = w_a(i)*h_a(i);
+    end
+
+% convert S11 dB for 54,60,66MHz to decimal
+f_a_l = zeros(length);
+f_a_c = zeros(length);
+f_a_h = zeros(length);
+
+for i = 1:height(T(:,3))
+
+    f_a_l(i) = 1-10^(table2array(T(i,4))/10);
+    f_a_c(i) = 1-10^(table2array(T(i,6))/10);
+    f_a_h(i) = 1-10^(table2array(T(i,5))/10);
+end
+
+%simulated atenna efficenty from .01 to 100%
+eff = .01:0.01:1;
+leneff = width(eff);
+%number of atenna elements    
+N_elm = 1;
+
+%% T_obs
+T_obs = d*Obs;
+T_obs_a = Obs_a*d;
+
+%% Universal constants
+
+%Boltzman Constant
+    k = .380649e-23;
+    c = 3e8;
+%% Wavelenth upper and lower bound
+    lambda_l = c/f_l;
+    lambda_u = c/f_u;
+    lambda_c = c/f_c;
+%% Power received by one RF emission from REASON upper and lower bound side lobe
+    P_r_l_e = zeros(length,leneff);
+    
+    for i = 1:length
+        for j = 1:leneff
+        P_r_l_e(i,j) = P_t_l*G_ts_l*(lambda_u)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*eff(j);
+   
+        end
+    end
+
+%%Signal to Noise Power Ratio for tranmission (dB)
+    SNR = zeros(length, leneff);
+    for i = 1:length
+        for j = 1:leneff
+
+            SNR(i,j) = 20*log((2*P_r_l_e(i,j)*T_obs*L_c*(1/(k*T_u*B))));
+   
+        end
+    end
+figure()
+plot(eff,SNR)
+title("SNR vs. Atenna efficiency side lobe -15dB REASON signal 3000km and 4 hour observation time")
+xlabel("Antenna efficiency")
+ylabel("SNR")
+legend("4mm","8mm","16mm","32mm","40mm","48mm","100mm")
+
+%%REASON Boresight power as a function of antenna diameter
+
+for i = 1:length  
+            P_r_l_bor(i) = P_t_l*G_0_u*(lambda_l)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*f_a_l(i);
+   
+end
+
+
+for i = 1:length  
+            P_r_u_bor(i) = P_t_l*G_0_u*(lambda_u)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*f_a_h(i);
+   
+end
+
+for i = 1:length  
+            P_r_c_bor(i) = P_t_l*G_0_u*(lambda_c)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol*f_a_c(i);
+   
+end
+
+figure()
+plot(w_a,P_r_l_bor',w_a,P_r_c_bor',w_a,P_r_u_bor')
+title("Antenna Boresight Power at 3000km at 4 hours observation time")
+xlabel("Antenna Width (m)")
+ylabel("Power (W)")
+legend("54e6 Mhz","60e6 Mhz","66e6 Mhz")
+
+%%SNR observation time, lower bound efficiency, width
+   f_a_l_len = width(f_a_l);
+   T_obs_a_len = width(Obs_a_s);
+
+    
+                for i = 1:length
+                P_r_l_e(i) = P_t_l*G_ts_l*(lambda_l)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R^2))*L_pol;
+                end
+                for i = 1:length
+                    for j = 1:T_obs_a_len
+                        SNR1(i,j) = 20*log((2*P_r_l_e(i)*Obs_a_s(j)*L_c*(1/(k*T_u*B))));
+                    end
+                end
+figure()
+ plot(T_obs_a,SNR1)
+ title("Antenna SNR vs observation time at 3000km at -15dBi REASON signal side lobe")
+ xlabel("Observation time (Hr)")
+ ylabel("SNR (dB)")
+ legend("4mm","8mm","16mm","32mm","40mm","48mm","100mm")
+
+%%SNR vs. distance
+R_a = 100:100:5e3;
+R_a_m = R_a*1e3;
+R_a_len = width(R_a);
+           
+                for i = 1:length
+                    for j = 1:R_a_len
+                     P_r_l_e(i,j) = P_t_l*G_ts_l*(lambda_l)^2/(4*pi)*A_eff(i)*N_elm*(1/(4*pi*R_a_m(j)^2))*L_pol;
+                    end
+                end
+                for i = 1:length
+                    for j = 1:R_a_len
+                        SNR1(i,j) = 20*log((2*P_r_l_e(i,j)*Obs*L_c*(1/(k*T_u*B))));
+                    end
+                end
+     
+
+figure()
+plot(R_a,SNR1)
+title("Antenna SNR vs distance at at -15dBi REASON signal side lobe 4 hour observation time")
+xlabel("Distance (km)")
+ylabel("SNR (dB)")
+legend("4mm","8mm","16mm","32mm","40mm","48mm","100mm")
+
+
+%% Effective Isotropic Radiation Power
+%calbe loss (dB)
+    %L_c = -5;
+   % EIRP = 10*log(P_r_u) - L_c + 2.15
+
+
+
+
+%equation variables
+
+
+
+% P_r =
+% G_0 =
+
+% A_eff = 
+
+% 
+% R =
+% 
+% G_a =
+% T_obs =
+% k =
+
+
+##### SOURCE END #####
+--></body></html>

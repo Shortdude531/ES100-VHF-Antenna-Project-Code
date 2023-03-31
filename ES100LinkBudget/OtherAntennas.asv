@@ -1,0 +1,114 @@
+close all; clear all; clc;
+f1 = 50e6;
+f2 = 70e6;
+fLower = 54e6;  %bandwidth lower frequency
+fUpper = 66e6;  %bandwidth higher frequency
+FCenter = 60e6; %Center frequency
+f_interval = .1e6; %frequency interval
+frequencies = linspace(f1,f2);
+
+
+d1 = dipoleCylindrical('Radius', 0.0006455,'Conductor',metal('Copper'),'Load',lumpedElement('Impedance',50),'ClosedEnd',1,"Length",2.39);
+df1 = design(dipoleFolded,FCenter);
+
+c1 = design(patchMicrostripCircular,FCenter);
+dd1 = design(dipole,FCenter);
+
+y1 = design(yagiUda,FCenter);
+
+q1 = design(quadCustom,FCenter);
+he = design(dipoleHelix,FCenter);
+h1 = design(horn,FCenter);
+
+
+
+
+
+
+
+figure()
+show(d1)
+
+figure()
+show(df1)
+
+figure()
+show(c1)
+
+figure()
+show(dd1)
+
+figure()
+show(y1)
+
+figure()
+show(q1)
+
+figure()
+show(he)
+
+figure()
+show(h1)
+
+
+
+
+
+
+
+figure()
+pattern(d1,FCenter)
+
+figure()
+pattern(df1,FCenter)
+
+figure()
+pattern(c1,FCenter)
+
+
+figure()
+pattern(dd1,FCenter)
+
+figure()
+pattern(y1,FCenter)
+
+figure()
+pattern(q1,FCenter)
+
+figure()
+pattern(he,FCenter)
+
+
+
+
+
+
+figure()
+S1= sparameters(d1,frequencies);
+
+figure()
+S2=sparameters(df1,frequencies);
+
+figure()
+S3=sparameters(c1,frequencies);
+
+figure()
+S4=sparameters(dd1,frequencies);
+
+figure()
+S5=sparameters(y1,frequencies);
+
+figure()
+S6=sparameters(q1,frequencies);
+
+figure()
+S7=sparameters(he,frequencies);
+
+
+
+
+
+
+
+
+
